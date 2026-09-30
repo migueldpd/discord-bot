@@ -46,6 +46,7 @@ class Comandos(commands.Cog):
 
     @commands.command()
     async def compliment(self,ctx,member:discord.Member):
+        await ctx.channel.purge(limit=1)
         x = random.randint(0,6)
         if x == 1:
             await ctx.send(f'O GOAT {member.mention}')
@@ -62,6 +63,44 @@ class Comandos(commands.Cog):
     async def dice(self,ctx):
         x = random.randint(1,6)
         await ctx.send(f'**{x}**')
+
+    @commands.command()
+    async def faceoff(self,ctx,member1:discord.Member,member2:discord.Member):
+        if member1 != member2:
+            user1power = random.randint(1,100)
+            user1speed = random.randint(1,100)
+            user1dodge = random.randint(1,100)
+            user2power = random.randint(1,100)
+            user2speed = random.randint(1,100)
+            user2dodge = random.randint(1,100)
+            totalplayer1 = user1power + user1speed + user1dodge
+            totalplayer2 = user2power + user2speed + user2dodge
+            x = discord.Embed(title='Faceoff',colour=0xFF5C00,description=f"""
+                {member1.mention}
+                💪 Power: {user1power}
+                ⚡ Speed: {user1speed}
+                🍀 Dodge: {user1dodge}
+                🔥 TOTAL POWER: {totalplayer1}
+
+                VS
+
+                {member2.mention}
+                💪 Power: {user2power}
+                ⚡ Speed: {user2speed}
+                🍀 Dodge: {user2dodge}
+                🔥 TOTAL POWER: {totalplayer2}
+                """)
+            await ctx.send(embed=x)
+
+            if totalplayer1 > totalplayer2:
+                await ctx.send(f"{member1.mention} wins !!!")
+            elif totalplayer2 > totalplayer1:
+                await ctx.send(f"{member2.mention} wins !!!")
+            else:
+                await ctx.send("Empataram")
+        else:
+            await ctx.send('Nao te podes enfrentar a ti mesmo :D')
+
 
 async def setup(bot):
     print("Commands cog loaded")

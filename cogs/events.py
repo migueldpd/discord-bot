@@ -19,11 +19,6 @@ class Eventos(commands.Cog):
         await ctx.send(f"Erro de comando  : {error}")
 
     @commands.Cog.listener()
-    async def on_message_delete(self,message):
-        await message.channel.send('Vou fingir que não vi isso 👀')
-
-
-    @commands.Cog.listener()
     async def on_message(self,message):
         if message.author == self.bot.user: 
             return
