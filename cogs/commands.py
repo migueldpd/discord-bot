@@ -108,6 +108,17 @@ class Comandos(commands.Cog):
 
         await ctx.send(f'Your xp is : {data[str(ctx.author.id)]+1}')
 
+    @commands.command()
+    async def leaderboard(self,ctx):
+        print("LEADERBOARD")
+        with open('data.json','r') as file:
+            data = json.load(file)
+            ordered = sorted(data,key=data.get,reverse=True)
+        mensagem = ""
+        for x in ordered:
+            mensagem += f"ID: {self.bot.get_user(int(x))} - XP: {data[x]}\n"
+        await ctx.send(mensagem)
+
 
 async def setup(bot):
     print("Commands cog loaded")
