@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-import random
+import random,json
 
 class Comandos(commands.Cog):
     def __init__(self,bot):
@@ -100,6 +100,13 @@ class Comandos(commands.Cog):
                 await ctx.send("Empataram")
         else:
             await ctx.send('Nao te podes enfrentar a ti mesmo :D')
+
+    @commands.command()
+    async def checkxp(self,ctx):
+        with open('data.json','r') as file:
+            data = json.load(file)
+
+        await ctx.send(f'Your xp is : {data[str(ctx.author.id)]+1}')
 
 
 async def setup(bot):

@@ -1,4 +1,5 @@
 from discord.ext import commands
+import json
 
 bad_words = ['shit','nigger','nigga']
 
@@ -22,6 +23,24 @@ class Eventos(commands.Cog):
     async def on_message(self,message):
         if message.author == self.bot.user: 
             return
+
+        with open('data.json','r') as file:
+            x = json.load(file)
+
+        with open('data.json','w') as file:
+            id_stringified = str(message.author.id)
+            if id_stringified in x:
+                print("existe") 
+                x[id_stringified] += 1
+                json.dump(x,file,indent=4)
+            else:
+                print("nao existe") 
+                x[id_stringified] = 1
+                json.dump(x,file,indent=4)
+
+
+        # id message.author.id
+
 
         for x in bad_words:
             if x in message.content.lower():
