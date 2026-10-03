@@ -1,10 +1,100 @@
 import discord
 from discord.ext import commands
 import random,json
+import requests
+
+bandeiras = {
+    "Australia": "🇦🇺",
+    "China": "🇨🇳",
+    "Japan": "🇯🇵",
+    "USA": "🇺🇸",
+    "Canada": "🇨🇦",
+    "Monaco": "🇲🇨",
+    "Spain": "🇪🇸",
+    "Austria": "🇦🇹",
+    "UK": "🇬🇧",
+    "Belgium": "🇧🇪",
+    "Hungary": "🇭🇺",
+    "Netherlands": "🇳🇱",
+    "Italy": "🇮🇹",
+    "Azerbaijan": "🇦🇿",
+    "Malaysia": "🇲🇾",
+    "Singapore": "🇸🇬",
+    "Mexico": "🇲🇽",
+    "Brazil": "🇧🇷",
+    "Qatar": "🇶🇦",
+    "UAE": "🇦🇪",
+}
+nacionalidades = {
+    "Italian": "🇮🇹",
+    "British": "🇬🇧",
+    "Monegasque": "🇲🇨",
+    "Dutch": "🇳🇱",
+    "French": "🇫🇷",
+    "German": "🇩🇪",
+    "Australian": "🇦🇺",
+    "Argentine": "🇦🇷",
+    "Brazilian": "🇧🇷",
+    "Finnish": "🇫🇮",
+    "Mexican": "🇲🇽",
+    "Spanish": "🇪🇸",
+    "Japanese": "🇯🇵",
+    "Thai": "🇹🇭",
+    "Canadian": "🇨🇦",
+    "New Zealander": "🇳🇿",
+    "American": "🇺🇸",
+    "Danish": "🇩🇰",
+    "Austrian": "🇦🇹",
+    "Belgian": "🇧🇪",
+    "Chinese": "🇨🇳",
+    "Polish": "🇵🇱",
+    "Russian": "🇷🇺",
+    "Swiss": "🇨🇭",
+}
 
 class Comandos(commands.Cog):
     def __init__(self,bot):
         self.bot = bot
+
+    #F1 COMMANDS START HERE
+    @commands.command()
+    async def f1leaderboard(self,ctx):
+        url = 'https://api.jolpi.ca/ergast/f1/2026/driverstandings'
+        resposta = requests.get(url)
+        dados = resposta.json()
+        pilotos = dados['MRData']['StandingsTable']['StandingsLists'][0]['DriverStandings']
+        embedf1_first11 = discord.Embed(color=0xE10600,title='🏎️ F1 Standings 2026 1/2')
+        embedf1_first11.set_thumbnail(url='https://images.fastcompany.com/image/upload/f_auto,q_auto,c_fit/wp-cms/uploads/2017/11/p-1-formula-one.jpg')
+        embed_string = ""
+        for i,piloto in enumerate(pilotos[:11]):
+            nacionalidade = piloto['Driver']['nationality']
+            embed_string += f"{i+1}. **{nacionalidades.get(nacionalidade,'🏳️')} {piloto['Driver']['givenName']}** **{piloto['Driver']['familyName']}** - {piloto['points']}\n"
+        embedf1_first11.description = embed_string
+        await ctx.send(embed=embedf1_first11)
+
+        embedf1_last11 = discord.Embed(color=0xFFFFFF,title='🏎️ F1 Standings 2026 2/2')
+        embed_string = ""
+        for i,piloto in enumerate(pilotos[11:]):
+            nacionalidade = piloto['Driver']['nationality']
+            embed_string += f"{i+12}. **{nacionalidades.get(nacionalidade,'🏳️')} {piloto['Driver']['givenName']}** **{piloto['Driver']['familyName']}** - {piloto['points']}\n"
+        embedf1_last11.description = embed_string
+        await ctx.send(embed=embedf1_last11)
+
+    @commands.command()
+    async def f1calendar(self,ctx):
+        url = 'https://api.jolpi.ca/ergast/f1/2026/races'
+        resposta = requests.get(url)
+        dados = resposta.json()
+        races = dados['MRData']['RaceTable']['Races']
+        race_embed = discord.Embed(title='🏎️ F1 Calendar 2026 Season')
+        calendar_string = ''
+        for i,race in enumerate(races):
+            bandeira_pais = race['Circuit']['Location']['country']
+            calendar_string += f"**{i+1} - {bandeiras.get(bandeira_pais,'🏳️')} {race['raceName']} {race['date']}**\n"
+        race_embed.description = calendar_string
+        await ctx.send(embed=race_embed)
+
+    #F1 COMMANDS END HERE
 
     @commands.command()
     async def hello(self,ctx):
