@@ -63,22 +63,14 @@ class Comandos(commands.Cog):
         resposta = requests.get(url)
         dados = resposta.json()
         pilotos = dados['MRData']['StandingsTable']['StandingsLists'][0]['DriverStandings']
-        embedf1_first11 = discord.Embed(color=0xE10600,title='🏎️ F1 Standings 2026 1/2')
-        embedf1_first11.set_thumbnail(url='https://images.fastcompany.com/image/upload/f_auto,q_auto,c_fit/wp-cms/uploads/2017/11/p-1-formula-one.jpg')
+        embedf1 = discord.Embed(color=0xE10600,title='🏎️ F1 Standings 2026 1/2')
+        embedf1.set_thumbnail(url='https://images.fastcompany.com/image/upload/f_auto,q_auto,c_fit/wp-cms/uploads/2017/11/p-1-formula-one.jpg')
         embed_string = ""
-        for i,piloto in enumerate(pilotos[:11]):
+        for i,piloto in enumerate(pilotos):
             nacionalidade = piloto['Driver']['nationality']
             embed_string += f"{i+1}. **{nacionalidades.get(nacionalidade,'🏳️')} {piloto['Driver']['givenName']}** **{piloto['Driver']['familyName']}** - {piloto['points']}\n"
-        embedf1_first11.description = embed_string
-        await ctx.send(embed=embedf1_first11)
-
-        embedf1_last11 = discord.Embed(color=0xFFFFFF,title='🏎️ F1 Standings 2026 2/2')
-        embed_string = ""
-        for i,piloto in enumerate(pilotos[11:]):
-            nacionalidade = piloto['Driver']['nationality']
-            embed_string += f"{i+12}. **{nacionalidades.get(nacionalidade,'🏳️')} {piloto['Driver']['givenName']}** **{piloto['Driver']['familyName']}** - {piloto['points']}\n"
-        embedf1_last11.description = embed_string
-        await ctx.send(embed=embedf1_last11)
+        embedf1.description = embed_string
+        await ctx.send(embed=embedf1)
 
     @commands.command()
     async def f1calendar(self,ctx):
@@ -94,7 +86,26 @@ class Comandos(commands.Cog):
         race_embed.description = calendar_string
         await ctx.send(embed=race_embed)
 
+    @commands.command()
+    async def f1lastrace(self,ctx):
+        url = 'https://api.jolpi.ca/ergast/f1/2026/last/results/'
+        result = requests.get(url)
+        dados = result.json()
+        corrida = dados['MRData']['RaceTable']['Races'][0]['Results'][0]
+        nomeCorrida = dados['MRData']['RaceTable']['Races'][0]
+        emb = discord.Embed(title=f"{bandeiras.get(nomeCorrida['Circuit']['Location']['country'],'🏳️')} {nomeCorrida['raceName']}")
+        emb.description = f"Last race winner was {corrida['Driver']['givenName']} {corrida['Driver']['familyName']}"
+        await ctx.send(embed=emb)
+    
+
     #F1 COMMANDS END HERE
+
+    @commands.command()
+    #admin 882269198758326342
+    @commands.has_role('882269198758326342')
+    async def checkrole(self,ctx):
+        await ctx.send('ADMIN ROLE')
+        
 
     @commands.command()
     async def hello(self,ctx):
