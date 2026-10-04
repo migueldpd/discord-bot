@@ -52,6 +52,8 @@ nacionalidades = {
     "Swiss": "🇨🇭",
 }
 
+#bot_commands id = 1554604290264539196
+
 class Comandos(commands.Cog):
     def __init__(self,bot):
         self.bot = bot
@@ -63,7 +65,7 @@ class Comandos(commands.Cog):
         resposta = requests.get(url)
         dados = resposta.json()
         pilotos = dados['MRData']['StandingsTable']['StandingsLists'][0]['DriverStandings']
-        embedf1 = discord.Embed(color=0xE10600,title='🏎️ F1 Standings 2026 1/2')
+        embedf1 = discord.Embed(color=0xE10600,title='🏎️ F1 Standings 2026')
         embedf1.set_thumbnail(url='https://images.fastcompany.com/image/upload/f_auto,q_auto,c_fit/wp-cms/uploads/2017/11/p-1-formula-one.jpg')
         embed_string = ""
         for i,piloto in enumerate(pilotos):
@@ -98,15 +100,8 @@ class Comandos(commands.Cog):
         await ctx.send(embed=emb)
     
 
-    #F1 COMMANDS END HERE
-
-    @commands.command()
-    #admin 882269198758326342
-    @commands.has_role('882269198758326342')
-    async def checkrole(self,ctx):
-        await ctx.send('ADMIN ROLE')
-        
-
+    #F1 COMMANDS END HERE     
+    
     @commands.command()
     async def hello(self,ctx):
         print("hello executado")
@@ -114,7 +109,14 @@ class Comandos(commands.Cog):
 
     @commands.command()
     async def delete(self,ctx,number:int):
-        await ctx.channel.purge(limit=number)
+        if ctx.channel == self.bot.get_channel(1554604290264539196):
+            adminrole = discord.utils.get(ctx.author.roles, name='Admin')
+            if adminrole:
+                await ctx.channel.purge(limit=number)
+            else:
+                await ctx.send('You need to be an Admin to do that')
+        else:
+            await ctx.send('You can only use this command in bot-commands channel')
 
     @commands.command()
     async def avatar(self,ctx,member:discord.Member):
@@ -164,6 +166,11 @@ class Comandos(commands.Cog):
     async def dice(self,ctx):
         x = random.randint(1,6)
         await ctx.send(f'**{x}**')
+
+    @commands.command()
+    async def coinflip(self,ctx):
+        moeda = random.choice(['Cara','Coroa'])
+        await ctx.send(f"Coinflip : {moeda}")
 
     @commands.command()
     async def faceoff(self,ctx,member1:discord.Member,member2:discord.Member):
