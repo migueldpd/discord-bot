@@ -101,12 +101,13 @@ class Comandos(commands.Cog):
     
 
     #F1 COMMANDS END HERE     
-    
+    #make bot say hello to you
     @commands.command()
     async def hello(self,ctx):
         print("hello executado")
         await ctx.send(f"Hello {ctx.author.mention}")
 
+    #delete message inside a specific channel
     @commands.command()
     async def delete(self,ctx,number:int):
         if ctx.channel == self.bot.get_channel(1554604290264539196):
@@ -118,11 +119,13 @@ class Comandos(commands.Cog):
         else:
             await ctx.send('You can only use this command in bot-commands channel')
 
+    #shows the avatar of that user
     @commands.command()
     async def avatar(self,ctx,member:discord.Member):
         image = member.display_avatar.url
         await ctx.send(image)
 
+    #display information about a specific user
     @commands.command()
     async def userinfo(self,ctx,member:discord.Member):
         embed = discord.Embed(title='Info from user')
@@ -133,6 +136,7 @@ class Comandos(commands.Cog):
         embed.add_field(name='Status',value=member.status,inline=False)
         await ctx.send(embed=embed)
 
+    #roast a specific user
     @commands.command()
     async def roast(self,ctx,member:discord.Member):
         x = random.randint(0,6)
@@ -147,6 +151,7 @@ class Comandos(commands.Cog):
         elif x == 5:
             await ctx.send(f'Tu não és ele {member.mention}')
 
+    #compliment a specific user
     @commands.command()
     async def compliment(self,ctx,member:discord.Member):
         await ctx.channel.purge(limit=1)
@@ -162,16 +167,19 @@ class Comandos(commands.Cog):
         elif x == 5:
             await ctx.send(f'You are him {member.mention}')
 
+    #throws a 1-6 dice 
     @commands.command()
     async def dice(self,ctx):
         x = random.randint(1,6)
         await ctx.send(f'**{x}**')
 
+    #normal coinflip
     @commands.command()
     async def coinflip(self,ctx):
         moeda = random.choice(['Cara','Coroa'])
         await ctx.send(f"Coinflip : {moeda}")
 
+    #1x1 on 2 specific users.Both get random values.
     @commands.command()
     async def faceoff(self,ctx,member1:discord.Member,member2:discord.Member):
         if member1 != member2:
@@ -209,6 +217,7 @@ class Comandos(commands.Cog):
         else:
             await ctx.send('Nao te podes enfrentar a ti mesmo :D')
 
+    #check your xp
     @commands.command()
     async def checkxp(self,ctx):
         with open('data.json','r') as file:
@@ -216,6 +225,7 @@ class Comandos(commands.Cog):
 
         await ctx.send(f'Your xp is : {data[str(ctx.author.id)]+1}')
 
+    #xp leaderboard of the server
     @commands.command()
     async def leaderboard(self,ctx):
         print("LEADERBOARD")
