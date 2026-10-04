@@ -8,10 +8,6 @@ class Eventos(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_message_edit(self,before,after):
-        await after.channel.send('👀👀')
-
-    @commands.Cog.listener()
     async def on_ready(self):
         print(f'we ready to go in {self.bot.user.name}')
 

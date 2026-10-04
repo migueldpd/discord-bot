@@ -23,7 +23,7 @@ bandeiras = {
     "Mexico": "🇲🇽",
     "Brazil": "🇧🇷",
     "Qatar": "🇶🇦",
-    "UAE": "🇦🇪",
+    "UAE": "🇦🇪"
 }
 nacionalidades = {
     "Italian": "🇮🇹",
@@ -50,6 +50,9 @@ nacionalidades = {
     "Polish": "🇵🇱",
     "Russian": "🇷🇺",
     "Swiss": "🇨🇭",
+    "Portuguese": "🇵🇹",
+    "Indian": "🇮🇳",
+    "Colombian": "🇨🇴"
 }
 
 #bot_commands id = 1554604290264539196
@@ -59,46 +62,76 @@ class Comandos(commands.Cog):
         self.bot = bot
 
     #F1 COMMANDS START HERE
+    #f1 channel = 1556371161653448746
+    @commands.command()
+    async def f1season(self,ctx,number:int):
+        if ctx.channel.id == 1556371161653448746:
+            if number >= 1950 and number <= 2026:
+                emb = discord.Embed(title=f'Standings of the {number} season',color=0xFF1801)
+                emb.set_thumbnail(url='https://images.fastcompany.com/image/upload/f_auto,q_auto,c_fit/wp-cms/uploads/2017/11/p-1-formula-one.jpg')
+                url = f'https://api.jolpi.ca/ergast/f1/{number}/driverstandings/'
+                resposta = requests.get(url)
+                dados = resposta.json()
+                pilotos = dados['MRData']['StandingsTable']['StandingsLists'][0]['DriverStandings']
+                embed_string = ''
+                for i,piloto in enumerate(pilotos):
+                    nacionalidade = piloto['Driver']['nationality']
+                    embed_string += f"{i+1}. **{nacionalidades.get(nacionalidade,'🏳️')} {piloto['Driver']['givenName']}** **{piloto['Driver']['familyName']}** - {piloto['points']}\n"
+                emb.description = embed_string
+                await ctx.send(embed=emb)
+            else:
+                await ctx.send('Season impossible to load')
+        else:
+            await ctx.send(f"This command only goes in the <#1556371161653448746> channel")
+
     @commands.command()
     async def f1leaderboard(self,ctx):
-        url = 'https://api.jolpi.ca/ergast/f1/2026/driverstandings'
-        resposta = requests.get(url)
-        dados = resposta.json()
-        pilotos = dados['MRData']['StandingsTable']['StandingsLists'][0]['DriverStandings']
-        embedf1 = discord.Embed(color=0xE10600,title='🏎️ F1 Standings 2026')
-        embedf1.set_thumbnail(url='https://images.fastcompany.com/image/upload/f_auto,q_auto,c_fit/wp-cms/uploads/2017/11/p-1-formula-one.jpg')
-        embed_string = ""
-        for i,piloto in enumerate(pilotos):
-            nacionalidade = piloto['Driver']['nationality']
-            embed_string += f"{i+1}. **{nacionalidades.get(nacionalidade,'🏳️')} {piloto['Driver']['givenName']}** **{piloto['Driver']['familyName']}** - {piloto['points']}\n"
-        embedf1.description = embed_string
-        await ctx.send(embed=embedf1)
+        if ctx.channel.id == 1556371161653448746:
+            url = 'https://api.jolpi.ca/ergast/f1/2026/driverstandings'
+            resposta = requests.get(url)
+            dados = resposta.json()
+            pilotos = dados['MRData']['StandingsTable']['StandingsLists'][0]['DriverStandings']
+            embedf1 = discord.Embed(color=0xE10600,title='🏎️ F1 Standings 2026')
+            embedf1.set_thumbnail(url='https://images.fastcompany.com/image/upload/f_auto,q_auto,c_fit/wp-cms/uploads/2017/11/p-1-formula-one.jpg')
+            embed_string = ""
+            for i,piloto in enumerate(pilotos):
+                nacionalidade = piloto['Driver']['nationality']
+                embed_string += f"{i+1}. **{nacionalidades.get(nacionalidade,'🏳️')} {piloto['Driver']['givenName']}** **{piloto['Driver']['familyName']}** - {piloto['points']}\n"
+            embedf1.description = embed_string
+            await ctx.send(embed=embedf1)
+        else:
+            await ctx.send(f"This command only goes in the <#1556371161653448746> channel")
 
     @commands.command()
     async def f1calendar(self,ctx):
-        url = 'https://api.jolpi.ca/ergast/f1/2026/races'
-        resposta = requests.get(url)
-        dados = resposta.json()
-        races = dados['MRData']['RaceTable']['Races']
-        race_embed = discord.Embed(title='🏎️ F1 Calendar 2026 Season')
-        calendar_string = ''
-        for i,race in enumerate(races):
-            bandeira_pais = race['Circuit']['Location']['country']
-            calendar_string += f"**{i+1} - {bandeiras.get(bandeira_pais,'🏳️')} {race['raceName']} {race['date']}**\n"
-        race_embed.description = calendar_string
-        await ctx.send(embed=race_embed)
+        if ctx.channel.id == 1556371161653448746:
+            url = 'https://api.jolpi.ca/ergast/f1/2026/races'
+            resposta = requests.get(url)
+            dados = resposta.json()
+            races = dados['MRData']['RaceTable']['Races']
+            race_embed = discord.Embed(title='🏎️ F1 Calendar 2026 Season')
+            calendar_string = ''
+            for i,race in enumerate(races):
+                bandeira_pais = race['Circuit']['Location']['country']
+                calendar_string += f"**{i+1} - {bandeiras.get(bandeira_pais,'🏳️')} {race['raceName']} {race['date']}**\n"
+            race_embed.description = calendar_string
+            await ctx.send(embed=race_embed)
+        else:
+            await ctx.send(f"This command only goes in the <#1556371161653448746> channel")
 
     @commands.command()
     async def f1lastrace(self,ctx):
-        url = 'https://api.jolpi.ca/ergast/f1/2026/last/results/'
-        result = requests.get(url)
-        dados = result.json()
-        corrida = dados['MRData']['RaceTable']['Races'][0]['Results'][0]
-        nomeCorrida = dados['MRData']['RaceTable']['Races'][0]
-        emb = discord.Embed(title=f"{bandeiras.get(nomeCorrida['Circuit']['Location']['country'],'🏳️')} {nomeCorrida['raceName']}")
-        emb.description = f"Last race winner was {corrida['Driver']['givenName']} {corrida['Driver']['familyName']}"
-        await ctx.send(embed=emb)
-    
+        if ctx.channel.id == 1556371161653448746:
+            url = 'https://api.jolpi.ca/ergast/f1/2026/last/results/'
+            result = requests.get(url)
+            dados = result.json()
+            corrida = dados['MRData']['RaceTable']['Races'][0]['Results'][0]
+            nomeCorrida = dados['MRData']['RaceTable']['Races'][0]
+            emb = discord.Embed(title=f"{bandeiras.get(nomeCorrida['Circuit']['Location']['country'],'🏳️')} {nomeCorrida['raceName']}")
+            emb.description = f"Last race winner was {corrida['Driver']['givenName']} {corrida['Driver']['familyName']}"
+            await ctx.send(embed=emb)    
+        else:
+            await ctx.send(f"This command only goes in the <#1556371161653448746> channel")
 
     #F1 COMMANDS END HERE     
     #make bot say hello to you
@@ -110,14 +143,7 @@ class Comandos(commands.Cog):
     #delete message inside a specific channel
     @commands.command()
     async def delete(self,ctx,number:int):
-        if ctx.channel == self.bot.get_channel(1554604290264539196):
-            adminrole = discord.utils.get(ctx.author.roles, name='Admin')
-            if adminrole:
-                await ctx.channel.purge(limit=number)
-            else:
-                await ctx.send('You need to be an Admin to do that')
-        else:
-            await ctx.send('You can only use this command in bot-commands channel')
+        await ctx.channel.purge(limit=number)
 
     #shows the avatar of that user
     @commands.command()
