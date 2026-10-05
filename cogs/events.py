@@ -31,7 +31,7 @@ class Eventos(commands.Cog):
                 x[id_stringified]['xp'] += 1
                 x[id_stringified]['coins'] += 5
             else:
-                x[id_stringified] = {'xp': 1,'coins':10}
+                x[id_stringified] = {'xp': 1,'coins':10,'slotsplayed':0}
         with open('data.json','w') as file:
             json.dump(x,file,indent=4)
 

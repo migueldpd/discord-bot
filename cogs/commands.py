@@ -275,6 +275,7 @@ class Comandos(commands.Cog):
         with open('data.json','r') as file:
             fc = json.load(file)
         if fc[myid]['coins'] >= 50:
+            fc[myid]['slotsplayed'] += 1
             fc[myid]['coins'] -= 50
             with open('data.json','w') as file:
                 json.dump(fc,file,indent=4)
