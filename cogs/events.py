@@ -47,7 +47,7 @@ class Eventos(commands.Cog):
         if 'amote' in message.content.lower():
             await message.channel.send('Querias dizer amo-te ? Seu pato.')
 
-        channelbotlog = self.bot.get_channel(123456789012345678)
+        channelbotlog = self.bot.get_channel(1556693088385114315)
         await channelbotlog.send(f"{message.author} enviou {message.content}")
 
 
