@@ -26,22 +26,16 @@ class Eventos(commands.Cog):
 
         with open('data.json','r') as file:
             x = json.load(file)
-
-        with open('data.json','w') as file:
             id_stringified = str(message.author.id)
             if id_stringified in x:
-                print("existe") 
-                x[id_stringified] += 1
-                json.dump(x,file,indent=4)
+                x[id_stringified]['xp'] += 1
+                x[id_stringified]['coins'] += 5
             else:
-                print("nao existe") 
-                x[id_stringified] = 1
-                json.dump(x,file,indent=4)
-
+                x[id_stringified] = {'xp': 1,'coins':10}
+        with open('data.json','w') as file:
+            json.dump(x,file,indent=4)
 
         # id message.author.id
-
-
         for x in bad_words:
             if x in message.content.lower():
                 await message.delete()

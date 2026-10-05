@@ -254,7 +254,6 @@ class Comandos(commands.Cog):
     #xp leaderboard of the server
     @commands.command()
     async def leaderboard(self,ctx):
-        print("LEADERBOARD")
         with open('data.json','r') as file:
             data = json.load(file)
             ordered = sorted(data,key=data.get,reverse=True)
@@ -263,6 +262,48 @@ class Comandos(commands.Cog):
             mensagem += f"ID: {self.bot.get_user(int(x))} - XP: {data[x]}\n"
         await ctx.send(mensagem)
 
+    @commands.command()
+    async def balance(self,ctx):
+        myid = str(ctx.author.id)
+        with open('data.json','r')as file:
+            x = json.load(file)
+        await ctx.send(f"{x[myid]['coins']+5} 🪙")
+
+    @commands.command()
+    async def slot(self,ctx):
+        myid = str(ctx.author.id)
+        with open('data.json','r') as file:
+            fc = json.load(file)
+        if fc[myid]['coins'] >= 50:
+            fc[myid]['coins'] -= 50
+            with open('data.json','w') as file:
+                json.dump(fc,file,indent=4)
+            slotList = ['💎','🔔','🍒','7️⃣','🍋']
+            x = random.choice(slotList)
+            y = random.choice(slotList)
+            z = random.choice(slotList)
+            await ctx.send(f"{x} | {y} | {z}")
+            if x == y and y == z:
+                if x == '💎':#1000COINS
+                    fc[myid]['coins'] += 10000
+                    moeda = 10000
+                if x == '🔔':#500COINS
+                    fc[myid]['coins'] += 5000
+                    moeda = 5000
+                if x == '🍒':#100COINS
+                    fc[myid]['coins'] += 1000
+                    moeda = 1000
+                if x == '7️⃣':#JACKPOT
+                    fc[myid]['coins'] += 20000
+                    moeda = 20000
+                if x == '🍋':#200COINS
+                    fc[myid]['coins'] += 2000
+                    moeda = 2000
+                with open('data.json','w') as file:
+                    json.dump(fc,file,indent=4)
+                await ctx.send(f'Ganhaste {moeda}🪙')
+        else:
+            await ctx.send('Nao tens 🪙 para jogar na slot')
 
 async def setup(bot):
     print("Commands cog loaded")
