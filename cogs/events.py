@@ -19,11 +19,14 @@ class Eventos(commands.Cog):
     async def on_command_error(self,ctx,error):
         await ctx.send(f"Erro de comando  : {error}")
 
-    @commands.command.listener()
-    async def on_voice_state_update(member,before,after):
+    @commands.Cog.listener()
+    async def on_voice_state_update(self,member,before,after):
         channelbotlog = member.guild.get_channel(1556693088385114315)
         if not before.channel and after.channel:
-            await channelbotlog.send(f"{member.name} joined voice")
+            await channelbotlog.send(f"{member.display_name} joined voice")
+        if before.channel and not after.channel:
+            await channelbotlog.send(f"{member.display_name} left voice")
+
 
     @commands.Cog.listener()
     async def on_message(self,message):
