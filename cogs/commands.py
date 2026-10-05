@@ -134,6 +134,13 @@ class Comandos(commands.Cog):
             await ctx.send(f"This command only goes in the <#1556371161653448746> channel")
 
     #F1 COMMANDS END HERE     
+
+    @commands.command()
+    async def randomfact(self,ctx):
+        with open('facts.json','r')as file:
+            facts = json.load(file)
+            await ctx.send(f"{random.choice(facts)}")
+
     #make bot say hello to you
     @commands.command()
     async def hello(self,ctx):
@@ -233,7 +240,6 @@ class Comandos(commands.Cog):
                 🔥 TOTAL POWER: {totalplayer2}
                 """)
             await ctx.send(embed=x)
-
             if totalplayer1 > totalplayer2:
                 await ctx.send(f"{member1.mention} wins !!!")
             elif totalplayer2 > totalplayer1:
@@ -285,26 +291,29 @@ class Comandos(commands.Cog):
             z = random.choice(slotList)
             await ctx.send(f"{x} | {y} | {z}")
             if x == y and y == z:
-                if x == '💎':#1000COINS
+                if x == '💎':
                     fc[myid]['coins'] += 10000
                     moeda = 10000
-                if x == '🔔':#500COINS
+                if x == '🔔':
                     fc[myid]['coins'] += 5000
                     moeda = 5000
-                if x == '🍒':#100COINS
+                if x == '🍒':
                     fc[myid]['coins'] += 1000
                     moeda = 1000
-                if x == '7️⃣':#JACKPOT
+                if x == '7️⃣':
                     fc[myid]['coins'] += 20000
                     moeda = 20000
-                if x == '🍋':#200COINS
+                if x == '🍋':
                     fc[myid]['coins'] += 2000
                     moeda = 2000
                 with open('data.json','w') as file:
                     json.dump(fc,file,indent=4)
                 await ctx.send(f'Ganhaste {moeda}🪙')
+            else:
+                await ctx.send('You lost 50 🪙')
         else:
-            await ctx.send('Nao tens 🪙 para jogar na slot')
+            await ctx.send('You dont have enough 🪙')
+        
 
 async def setup(bot):
     print("Commands cog loaded")
