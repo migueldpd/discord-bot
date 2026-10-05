@@ -21,6 +21,7 @@ class Eventos(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self,message):
+        channelbotlog = self.bot.get_channel(1556693088385114315)
         if message.author == self.bot.user: 
             return
 
@@ -40,6 +41,7 @@ class Eventos(commands.Cog):
         # id message.author.id
         for x in bad_words:
             if x in message.content.lower():
+                await channelbotlog.send(f"{message.author} enviou {message.content}")
                 await message.delete()
                 await message.channel.send(f"{message.author.mention}, dont do that")
                 return
@@ -47,7 +49,7 @@ class Eventos(commands.Cog):
         if 'amote' in message.content.lower():
             await message.channel.send('Querias dizer amo-te ? Seu pato.')
 
-        channelbotlog = self.bot.get_channel(1556693088385114315)
+        
         await channelbotlog.send(f"{message.author} enviou {message.content}")
 
 
