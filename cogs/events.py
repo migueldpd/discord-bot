@@ -41,7 +41,7 @@ class Eventos(commands.Cog):
         # id message.author.id
         for x in bad_words:
             if x in message.content.lower():
-                await channelbotlog.send(f"{message.author} enviou {message.content}")
+                await channelbotlog.send(f"{message.author} enviou **{message.content}**")
                 await message.delete()
                 await message.channel.send(f"{message.author.mention}, dont do that")
                 return
