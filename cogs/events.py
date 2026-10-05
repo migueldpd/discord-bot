@@ -24,6 +24,8 @@ class Eventos(commands.Cog):
         if message.author == self.bot.user: 
             return
 
+        #1556693088385114315 id do bot log
+        
         with open('data.json','r') as file:
             x = json.load(file)
             id_stringified = str(message.author.id)
@@ -44,6 +46,9 @@ class Eventos(commands.Cog):
 
         if 'amote' in message.content.lower():
             await message.channel.send('Querias dizer amo-te ? Seu pato.')
+
+        channelbotlog = self.bot.get_channel(123456789012345678)
+        await channelbotlog.send(f"{message.author} enviou {message.content}")
 
 
 async def setup(bot):
