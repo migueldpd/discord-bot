@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import random,json
 import requests
+from cogs.quiz import active_quiz, questions
 
 bandeiras = {
     "Australia": "🇦🇺",
@@ -183,6 +184,15 @@ class Comandos(commands.Cog):
             await ctx.send(f'Odeio você demais {member.mention}')
         elif x == 5:
             await ctx.send(f'Tu não és ele {member.mention}')
+
+    @commands.command()
+    async def quiz(self,ctx):
+        pergunta = random.choice(questions)
+        active_quiz[ctx.channel.id] = pergunta['answer']
+        await ctx.send(pergunta['question'])
+        await ctx.send(pergunta['options'])
+        
+
 
     #compliment a specific user
     @commands.command()

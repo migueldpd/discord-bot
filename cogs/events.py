@@ -1,5 +1,6 @@
 from discord.ext import commands
 import json
+from cogs.quiz import active_quiz
 
 bad_words = ['shit','nigger','nigga']
 
@@ -30,6 +31,17 @@ class Eventos(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self,message):
+        #quizz
+        if message.channel.id in active_quiz:
+            answer = active_quiz[message.channel.id]
+            if message.content.upper() == answer:
+                await message.channel.send('🎊 Spot on')
+                del active_quiz[message.channel.id]
+            elif message.content.upper() in ['A', 'B', 'C', 'D']:
+                await message.channel.send('❌ Wrong answer')
+                del active_quiz[message.channel.id]
+
+
         channelbotlog = self.bot.get_channel(1556693088385114315)
         if message.author == self.bot.user: 
             return
