@@ -210,18 +210,6 @@ class Comandos(commands.Cog):
         elif x == 5:
             await ctx.send(f'You are him {member.mention}')
 
-    #throws a 1-6 dice 
-    @commands.command()
-    async def dice(self,ctx):
-        x = random.randint(1,6)
-        await ctx.send(f'**{x}**')
-
-    #normal coinflip
-    @commands.command()
-    async def coinflip(self,ctx):
-        moeda = random.choice(['Cara','Coroa'])
-        await ctx.send(f"Coinflip : {moeda}")
-
     #1x1 on 2 specific users.Both get random values.
     @commands.command()
     async def faceoff(self,ctx,member1:discord.Member,member2:discord.Member):
