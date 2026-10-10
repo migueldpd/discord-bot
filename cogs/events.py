@@ -51,7 +51,6 @@ class Eventos(commands.Cog):
         if before.channel and not after.channel:
             await channelbotlog.send(f"{member.display_name} left voice")
 
-
     @commands.Cog.listener()
     async def on_message(self,message):
         #quizz
@@ -63,7 +62,6 @@ class Eventos(commands.Cog):
             elif message.content.upper() in ['A', 'B', 'C', 'D']:
                 await message.channel.send('❌ Wrong answer')
                 del active_quiz[message.channel.id]
-
 
         channelbotlog = self.bot.get_channel(1556693088385114315)
         if message.author == self.bot.user: 
@@ -79,6 +77,7 @@ class Eventos(commands.Cog):
 
         if 'amote' in message.content.lower():
             await message.channel.send('Querias dizer amo-te ? Seu pato.')
+        
 
         
         await channelbotlog.send(f"{message.author} enviou {message.content}")

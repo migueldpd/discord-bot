@@ -231,6 +231,39 @@ class Comandos(commands.Cog):
         with open('data.json','w') as file:
             json.dump(pessoa,file,indent=4)
 
+    @commands.command()
+    async def rps(self,ctx,member:discord.Member):
+        emb = discord.Embed(title='🎮 Rock Paper Scissors',description='Let the battle begin')
+        rps = ['🗿','📃','✂️']
+        player1 = random.choice(rps)
+        player2 = random.choice(rps)
+        emb.add_field(name=f'{ctx.author.name}',
+                      value=f'{player1}',
+                      inline=True
+                      )
+        emb.add_field(name=f'{member.name}',
+                      value=f'{player2}',
+                      inline=True
+                      )
+        if player1 == player2:
+            await ctx.send('**DRAW**')
+            return
+
+        if ((player1 == '🗿' and player2 == '✂️') or
+            (player1 == '📃' and player2 == '🗿') or
+            (player1 == '✂️' and player2 == '📃')
+        ):
+            emb.add_field(name="🏆 Result",
+                          value=f"**{ctx.author.name} WINS**",
+                          inline=False
+                         )
+        else:
+            emb.add_field(name="🏆 Result",
+                          value=f"**{member.name} WINS**",
+                          inline=False
+                         )
+        await ctx.send(embed=emb)
+
 async def setup(bot):
     print("Commands Cog loaded")
     await bot.add_cog(Comandos(bot))

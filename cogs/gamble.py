@@ -52,7 +52,6 @@ class Gambler(commands.Cog):
         while points > 21 and aces > 0:
             points -= 10
             aces -= 1
-
         return points
 
     @commands.command()
