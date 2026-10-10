@@ -8,9 +8,32 @@ class Eventos(commands.Cog):
     def __init__(self,bot):
         self.bot = bot
 
+
     @commands.Cog.listener()
     async def on_ready(self):
-        print(f'we ready to go in {self.bot.user.name}')
+        SERVER_ID = 1553839005114695752
+        guild = self.bot.get_guild(SERVER_ID)
+        print("GUILD:", guild)
+
+        if guild is None:
+            print("NAO ENCONTREI O SERVIDOR")
+            return
+
+        print("SERVIDOR:", guild.name)
+
+        with open('data.json','r') as file:
+            membros = json.load(file)
+
+        for member in guild.members:
+            if member.bot:
+                continue
+            user_id = str(member.id)
+            if user_id not in membros:
+                membros[user_id]={'username':member.name,'xp':0,'balance':0,'daily': ''}
+
+        with open('data.json','w') as file:
+            json.dump(membros,file,indent=4)
+          
 
     @commands.Cog.listener()
     async def on_member_join(self,member):
@@ -46,19 +69,6 @@ class Eventos(commands.Cog):
         if message.author == self.bot.user: 
             return
 
-        #1556693088385114315 id do bot log
-        
-        with open('data.json','r') as file:
-            x = json.load(file)
-            id_stringified = str(message.author.id)
-            if id_stringified in x:
-                x[id_stringified]['xp'] += 1
-                x[id_stringified]['coins'] += 5
-            else:
-                x[id_stringified] = {'xp': 1,'coins':10,'slotsplayed':0}
-        with open('data.json','w') as file:
-            json.dump(x,file,indent=4)
-
         # id message.author.id
         for x in bad_words:
             if x in message.content.lower():
@@ -75,5 +85,5 @@ class Eventos(commands.Cog):
 
 
 async def setup(bot):
-    print("events cog loaded")
+    print("Events cog loaded")
     await bot.add_cog(Eventos(bot))

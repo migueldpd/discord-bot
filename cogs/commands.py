@@ -3,6 +3,7 @@ from discord.ext import commands
 import random,json
 import requests
 from cogs.quiz import active_quiz, questions
+import datetime as dt
 
 bandeiras = {
     "Australia": "🇦🇺",
@@ -142,12 +143,6 @@ class Comandos(commands.Cog):
             facts = json.load(file)
             await ctx.send(f"{random.choice(facts)}")
 
-    #make bot say hello to you
-    @commands.command()
-    async def hello(self,ctx):
-        print("hello executado")
-        await ctx.send(f"Hello {ctx.author.mention}")
-
     #delete message inside a specific channel
     @commands.command()
     async def delete(self,ctx,number:int):
@@ -170,45 +165,12 @@ class Comandos(commands.Cog):
         embed.add_field(name='Status',value=member.status,inline=False)
         await ctx.send(embed=embed)
 
-    #roast a specific user
-    @commands.command()
-    async def roast(self,ctx,member:discord.Member):
-        x = random.randint(0,6)
-        if x == 1:
-            await ctx.send(f'És podre {member.mention}')
-        elif x == 2:
-            await ctx.send(f'Feiolas {member.mention}')
-        elif x == 3:
-            await ctx.send(f'Não vales nada {member.mention}')
-        elif x == 4:
-            await ctx.send(f'Odeio você demais {member.mention}')
-        elif x == 5:
-            await ctx.send(f'Tu não és ele {member.mention}')
-
     @commands.command()
     async def quiz(self,ctx):
         pergunta = random.choice(questions)
         active_quiz[ctx.channel.id] = pergunta['answer']
         await ctx.send(pergunta['question'])
         await ctx.send(pergunta['options'])
-        
-
-
-    #compliment a specific user
-    @commands.command()
-    async def compliment(self,ctx,member:discord.Member):
-        await ctx.channel.purge(limit=1)
-        x = random.randint(0,6)
-        if x == 1:
-            await ctx.send(f'O GOAT {member.mention}')
-        elif x == 2:
-            await ctx.send(f'Tu és ele {member.mention}')
-        elif x == 3:
-            await ctx.send(f'És espetacular {member.mention}')
-        elif x == 4:
-            await ctx.send(f'Muito lindo {member.mention}')
-        elif x == 5:
-            await ctx.send(f'You are him {member.mention}')
 
     #1x1 on 2 specific users.Both get random values.
     @commands.command()
@@ -245,74 +207,30 @@ class Comandos(commands.Cog):
             else:
                 await ctx.send("Empataram")
         else:
-            await ctx.send('Nao te podes enfrentar a ti mesmo :D')
+            await ctx.send('Nao te podes enfrentar a ti mesmo :D')   
 
-    #check your xp
     @commands.command()
-    async def checkxp(self,ctx):
+    async def howgay(self,ctx,member:discord.Member):
+        random_number = random.randint(1,100)
+        await ctx.send(f"{member} is {random_number}% gay")
+
+    @commands.command()
+    async def daily(self,ctx):
         with open('data.json','r') as file:
-            data = json.load(file)
-
-        await ctx.send(f'Your xp is : {data[str(ctx.author.id)]+1}')
-
-    #xp leaderboard of the server
-    @commands.command()
-    async def leaderboard(self,ctx):
-        with open('data.json','r') as file:
-            data = json.load(file)
-            ordered = sorted(data,key=data.get,reverse=True)
-        mensagem = ""
-        for x in ordered:
-            mensagem += f"ID: {self.bot.get_user(int(x))} - XP: {data[x]}\n"
-        await ctx.send(mensagem)
-
-    @commands.command()
-    async def balance(self,ctx):
-        myid = str(ctx.author.id)
-        with open('data.json','r')as file:
-            x = json.load(file)
-        await ctx.send(f"{x[myid]['coins']+5} 🪙")
-
-    @commands.command()
-    async def slot(self,ctx):
-        myid = str(ctx.author.id)
-        with open('data.json','r') as file:
-            fc = json.load(file)
-        if fc[myid]['coins'] >= 50:
-            fc[myid]['slotsplayed'] += 1
-            fc[myid]['coins'] -= 50
-            with open('data.json','w') as file:
-                json.dump(fc,file,indent=4)
-            slotList = ['💎','🔔','🍒','7️⃣','🍋']
-            x = random.choice(slotList)
-            y = random.choice(slotList)
-            z = random.choice(slotList)
-            await ctx.send(f"{x} | {y} | {z}")
-            if x == y and y == z:
-                if x == '💎':
-                    fc[myid]['coins'] += 10000
-                    moeda = 10000
-                if x == '🔔':
-                    fc[myid]['coins'] += 5000
-                    moeda = 5000
-                if x == '🍒':
-                    fc[myid]['coins'] += 1000
-                    moeda = 1000
-                if x == '7️⃣':
-                    fc[myid]['coins'] += 20000
-                    moeda = 20000
-                if x == '🍋':
-                    fc[myid]['coins'] += 2000
-                    moeda = 2000
-                with open('data.json','w') as file:
-                    json.dump(fc,file,indent=4)
-                await ctx.send(f'Ganhaste {moeda}🪙')
-            else:
-                await ctx.send('You lost 50 🪙')
+            pessoa = json.load(file)
+            userid = str(ctx.author.id)
+        now = dt.datetime.now().date()
+        now_stringed = str(now)
+        if pessoa[userid]['daily'] == now_stringed:
+            await ctx.send('**You already redeemed your daily coins**')
         else:
-            await ctx.send('You dont have enough 🪙')
-        
+            await ctx.send('**You received 1000 coins**')
+            pessoa[userid]['balance'] += 1000
+            pessoa[userid]['daily'] = now_stringed
+
+        with open('data.json','w') as file:
+            json.dump(pessoa,file,indent=4)
 
 async def setup(bot):
-    print("Commands cog loaded")
+    print("Commands Cog loaded")
     await bot.add_cog(Comandos(bot))

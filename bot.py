@@ -20,6 +20,7 @@ async def main():
     await bot.load_extension('cogs.events')
     await bot.load_extension('cogs.commands')
     await bot.load_extension('cogs.gamble')
+    await bot.load_extension('cogs.admin')
     await bot.start(token)
 
 asyncio.run(main())
