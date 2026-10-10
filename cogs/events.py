@@ -11,7 +11,7 @@ class Eventos(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        SERVER_ID = 1553839005114695752
+        SERVER_ID = 519810137171558400
         guild = self.bot.get_guild(SERVER_ID)
         print("GUILD:", guild)
 
