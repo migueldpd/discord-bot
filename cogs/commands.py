@@ -247,6 +247,10 @@ class Comandos(commands.Cog):
                       )
         if player1 == player2:
             await ctx.send('**DRAW**')
+            emb.add_field(name="🏆 Result",
+                          value="**DRAW**",
+                          inline=False
+                         )
             return
 
         if ((player1 == '🗿' and player2 == '✂️') or
@@ -263,6 +267,25 @@ class Comandos(commands.Cog):
                           inline=False
                          )
         await ctx.send(embed=emb)
+
+    @commands.command()
+    @commands.cooldown(rate=1,per=600,type=commands.BucketType.user)
+    async def rob(self,ctx,member:discord.Member):
+        with open('data.json','r') as file:
+            pessoa = json.load(file)
+        if pessoa[str(member.id)]['balance'] < 100:
+            await ctx.send(f"**Cant rob {member.name}... he's already poor**")
+        else:
+            x = random.randint(1,100)
+            if x < 51: #1 to 50 robs
+                await ctx.send(f"{ctx.author.name} robbed 100 coins from {member.name}")
+                pessoa[str(ctx.author.id)]['balance'] += 100
+                pessoa[str(member.id)]['balance'] -= 100
+                with open('data.json','w')as file:
+                    json.dump(pessoa,file,indent=4)
+            else: #51 to 100 doesnt rob
+                await ctx.send(f"{member.name} wasn't robbed")
+
 
 async def setup(bot):
     print("Commands Cog loaded")

@@ -1,6 +1,7 @@
 from discord.ext import commands
 import discord
 import json
+import datetime as dt
 
 class Admin(commands.Cog):
     def __init__(self,bot):
@@ -55,6 +56,20 @@ class Admin(commands.Cog):
                 await ctx.send(embed=emb)
         else:
             await ctx.send('You dont have permission to do that')
+
+    @commands.command()
+    async def createpoll(self,ctx,duration:int,*,args):
+        await ctx.channel.purge(limit=1)
+        parts = args.split("|")
+        question = parts[0]
+        answers = parts[1:]
+
+        poll = discord.Poll(question=f"{question}",duration=dt.timedelta(hours=duration))
+        for answer in answers:
+            answer = answer.strip()
+            if answer:
+                poll.add_answer(text=f"{answer}")
+        await ctx.send(poll=poll)
 
 async def setup(bot):
     print("Admin Cog loaded")

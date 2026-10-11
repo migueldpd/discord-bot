@@ -3,7 +3,7 @@ from discord.ext import commands
 import json,random
 
 active_games = {}
-
+higherlowerDic = {}
 class Gambler(commands.Cog):
     def __init__(self,bot):
         self.bot = bot
@@ -150,7 +150,59 @@ class Gambler(commands.Cog):
         else:
             await ctx.send("**Play Blackjack in 🃏・blackjack channel**")
 
-        
+    @commands.command()
+    async def higherlower(self,ctx):
+        naipes = ['♠️','♣️','♥️','♦️']
+        valores = ['2','3','4','5','6','7','8','9','10']
+        deck = []
+        for naipe in naipes:
+            for val in valores:
+                deck.append(f'{val}{naipe}')
+        random.shuffle(deck)
+        first_card = deck.pop()
+        await ctx.send(f"**Higher or Lower**\nCard : {first_card}\nHigher or Lower?")
+        higherlowerDic[str(ctx.author.id)] = {
+            'active': 'yes',
+            'card' : first_card,
+            'deck' : deck
+        }
+
+    @commands.command()
+    async def higher(self,ctx):
+        if str(ctx.author.id) in higherlowerDic:
+            tableCard = higherlowerDic[str(ctx.author.id)]['card']
+            nextcard = higherlowerDic[str(ctx.author.id)]['deck'].pop()
+            table = int(tableCard[:-2])
+            next = int(nextcard[:-2])
+            await ctx.send(f"Next card : {nextcard}")
+            if next > table:
+                await ctx.send("**YOU WON**")
+            elif next < table:
+                await ctx.send("**YOU LOST**")
+            else:
+                await ctx.send("**DRAW**")
+            del higherlowerDic[str(ctx.author.id)]
+        else:
+            await ctx.send("**No current higher or lower game**\n**Do !higherlower to start one**")
+
+    @commands.command()
+    async def lower(self,ctx):
+        if str(ctx.author.id) in higherlowerDic:
+            tableCard = higherlowerDic[str(ctx.author.id)]['card']
+            nextcard = higherlowerDic[str(ctx.author.id)]['deck'].pop()
+            table = int(tableCard[:-2])
+            next = int(nextcard[:-2])
+            await ctx.send(f"Next card : {nextcard}")
+            if next < table:
+                await ctx.send("**YOU WON**")
+            elif next > table:
+                await ctx.send("**YOU LOST**")
+            else:
+                await ctx.send("**DRAW**")
+            del higherlowerDic[str(ctx.author.id)]
+        else:
+            await ctx.send("**No current higher or lower game**\n**Do !higherlower to start one**")
+
 async def setup(bot):
     print("Gambler Cog loaded")
     await bot.add_cog(Gambler(bot))

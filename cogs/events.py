@@ -33,7 +33,6 @@ class Eventos(commands.Cog):
 
         with open('data.json','w') as file:
             json.dump(membros,file,indent=4)
-          
 
     @commands.Cog.listener()
     async def on_member_join(self,member):
@@ -41,7 +40,9 @@ class Eventos(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command_error(self,ctx,error):
-        await ctx.send(f"Erro de comando  : {error}")
+        #await ctx.send(f"Erro de comando  : {error}")
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(f"Espera {error.retry_after:.0f} segundos!")
 
     @commands.Cog.listener()
     async def on_voice_state_update(self,member,before,after):
