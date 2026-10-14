@@ -4,6 +4,7 @@ import random,json
 import requests
 from cogs.quiz import active_quiz, questions
 import datetime as dt
+import asyncio
 
 bandeiras = {
     "Australia": "🇦🇺",
@@ -274,7 +275,9 @@ class Comandos(commands.Cog):
         with open('data.json','r') as file:
             pessoa = json.load(file)
         if pessoa[str(member.id)]['balance'] < 100:
-            await ctx.send(f"**Cant rob {member.name}... he's already poor**")
+            botmsg = await ctx.send(f"**Cant rob {member.name}... he's already poor**")
+            await asyncio.sleep(60)
+            await botmsg.delete()
         else:
             x = random.randint(1,100)
             if x < 51: #1 to 50 robs

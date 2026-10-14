@@ -6,7 +6,7 @@ import datetime as dt
 class Admin(commands.Cog):
     def __init__(self,bot):
         self.bot = bot
-
+    
     ADMIN_ROLE_ID = 1181426834282381403
     @commands.command()
     async def givemoney(self,ctx,number:int,member:discord.Member):
@@ -71,6 +71,18 @@ class Admin(commands.Cog):
                 poll.add_answer(text=f"{answer}")
         await ctx.send(poll=poll)
 
+    @commands.command()
+    async def kick(self,ctx,member:discord.Member):
+        if any(role.id == self.ADMIN_ROLE_ID for role in ctx.author.roles):
+            guild = self.bot.get_guild(1553839005114695752)
+            print(f"KICK GUILD : {guild}")
+            if member.guild.id == guild.id:
+                await member.kick()
+                await ctx.send(f"{member.name} was kicked from the server")
+        else:
+            await ctx.send('**No permission to do this**')
+            
+    
 async def setup(bot):
     print("Admin Cog loaded")
     await bot.add_cog(Admin(bot))
